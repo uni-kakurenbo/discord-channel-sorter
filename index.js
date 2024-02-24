@@ -74,7 +74,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
     ) {
       await interaction.followUp({
         content: "Missing Permissions",
-        ephemeral: true,
       });
       return;
     }
