@@ -3,6 +3,7 @@ import {
   Events,
   GatewayIntentBits,
   ChannelType,
+  PermissionsBitField,
 } from "discord.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -17,6 +18,10 @@ const DIFFERENCES = {
   "10 Days": 10 * 24 * 60 * 60 * 1000,
   "30 Days": 30 * 24 * 60 * 60 * 1000,
 };
+
+client.on(Events.ClientReady, async () => {
+  console.log("Ready");
+});
 
 // Register
 /*
@@ -60,6 +65,19 @@ client.on(Events.InteractionCreate, async (interaction) => {
     const interactionChannel = await interactionGuild.channels.fetch(
       interaction.channelId,
     );
+
+    console.log({ permissions: interaction.memberPermissions });
+    if (
+      !interaction.memberPermissions.has(
+        PermissionsBitField.Flags.ManageChannels,
+      )
+    ) {
+      await interaction.followUp({
+        content: "Missing Permissions",
+        ephemeral: true,
+      });
+      return;
+    }
 
     console.log({
       interactionGuild,
